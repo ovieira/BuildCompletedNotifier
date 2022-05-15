@@ -16,15 +16,20 @@ namespace JoaoVieira.BuildCompletedNotifier.Editor
 
         public int callbackOrder => int.MaxValue;
 
-        public void OnPostprocessBuild(BuildReport report)
+        public async void OnPostprocessBuild(BuildReport report)
         {
-            PlaySuccessAudio();
+           await PlaySuccessAudio().ConfigureAwait(false);
         }
 
         [MenuItem("Test/Play")]
-        private static async void PlaySuccessAudio()
+        private static async Task Test()
         {
-            await Task.Delay(notificationDelayInMilliseconds);
+            await PlaySuccessAudio().ConfigureAwait(false);
+        }
+
+        private static async Task PlaySuccessAudio()
+        {
+            await Task.Delay(notificationDelayInMilliseconds).ConfigureAwait(true);
             AudioClip clip =
                 EditorGUIUtility.Load(
                         "Packages/com.ovieira.buildcompletednotifier/Scripts/Editor/buildcompleted.wav"

@@ -17,7 +17,7 @@ namespace JoaoVieira.BuildCompletedNotifier.Editor
                     null,
                     new object[]
                     {
-                        clip, startSample, loop
+                        clip, startSample, loop,
                     }
                 );
             }
@@ -32,9 +32,9 @@ namespace JoaoVieira.BuildCompletedNotifier.Editor
                 "PlayPreviewClip",
                 BindingFlags.Static | BindingFlags.Public,
                 null,
-                new Type[]
+                new[]
                 {
-                    typeof(AudioClip), typeof(int), typeof(bool)
+                    typeof(AudioClip), typeof(int), typeof(bool),
                 },
                 null
             );
