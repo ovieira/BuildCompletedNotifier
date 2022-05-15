@@ -2,6 +2,7 @@
 using System.IO;
 using System.Media;
 using System.Threading;
+using System.Threading.Tasks;
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
@@ -11,30 +12,35 @@ namespace JoaoVieira.BuildCompletedNotifier.Editor
 {
     class BuildCompletedNotifier : IPostprocessBuildWithReport
     {
-        private static Thread thread;
+        private const int notificationDelayInMilliseconds = 1000;
 
         public int callbackOrder => int.MaxValue;
 
-        public void OnPostprocessBuild(BuildReport report)
+        public async void OnPostprocessBuild(BuildReport report)
         {
-            AudioClip clip = Resources.Load<AudioClip>("buildcompleted");
-            string clipPath = AssetDatabase.GetAssetPath(clip);
-            thread = new Thread(() => PlaySound(clipPath))
-            {
-                IsBackground = true,
-            };
-            thread.Start();
+           await PlaySuccessAudio().ConfigureAwait(false);
         }
 
-        private static void PlaySound(string clipPath)
+        [MenuItem("Test/Play")]
+        private static async Task Test()
         {
-            string absolutePath = Path.Combine(Environment.CurrentDirectory, clipPath);
-            using (SoundPlayer player = new SoundPlayer(absolutePath))
+            await PlaySuccessAudio().ConfigureAwait(false);
+        }
+
+        private static async Task PlaySuccessAudio()
+        {
+            await Task.Delay(notificationDelayInMilliseconds).ConfigureAwait(true);
+            AudioClip clip =
+                EditorGUIUtility.Load(
+                        "Packages/com.ovieira.buildcompletednotifier/Scripts/Editor/buildcompleted.wav"
+                    ) as
+                    AudioClip;
+            if (clip == null)
             {
-                player.PlaySync();
+                Debug.Log("Unable to load audio clip");
             }
 
-            thread.Join();
+            EditorAudioUtils.PlayClip(clip);
         }
     }
 }
