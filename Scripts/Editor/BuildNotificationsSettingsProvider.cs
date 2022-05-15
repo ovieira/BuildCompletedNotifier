@@ -3,42 +3,46 @@ using UnityEditor;
 
 namespace JoaoVieira.BuildCompletedNotifier
 {
-    public class BuildNotificationsSettingsProvider
+    class BuildNotificationsSettingsProvider : SettingsProvider
     {
+        public BuildNotificationsSettingsProvider(string path, SettingsScope scopes,
+            IEnumerable<string> keywords = null) : base(path, scopes, keywords) { }
+
         [SettingsProvider]
         public static SettingsProvider CreateSettingsProvider()
         {
-            return new SettingsProvider("Project/JoaoVieira.BuildCompletedNotifications", SettingsScope.Project)
-            {
-                guiHandler = (searchContext) =>
+            SettingsProvider provider = new BuildNotificationsSettingsProvider(
+                "Project/JoaoVieira.BuildCompletedNotifications",
+                SettingsScope.Project
+            );
+            provider.keywords = new List<string>(
+                new[]
                 {
-                    var settings = BuildNotificationsSettings.Instance;
-                    var serialized = new SerializedObject(settings);
-                    var editor = Editor.CreateEditor(settings);
+                    "Build", "Notifications"
+                }
+            );
+            return provider;
+        }
 
-                    bool isNotificationsEnabled = BuildNotificationsSettings.Instance.IsEnabled;
+        public override void OnGUI(string searchContext)
+        {
+            var settings = BuildNotificationsSettings.Instance;
+            var serialized = new SerializedObject(settings);
+            var editor = Editor.CreateEditor(settings);
 
-                    EditorGUI.BeginChangeCheck();
-                    editor.OnInspectorGUI();
+            bool isNotificationsEnabled = BuildNotificationsSettings.Instance.IsEnabled;
 
-                    isNotificationsEnabled = EditorGUILayout.Toggle(
-                        "Enable notifications",
-                        isNotificationsEnabled
-                    );
-
-                    if (EditorGUI.EndChangeCheck())
-                    {
-                        BuildNotificationsSettings.Instance.IsEnabled = isNotificationsEnabled;
-                        serialized.ApplyModifiedProperties();
-                    }
-                },
-                keywords = new HashSet<string>(
-                    new[]
-                    {
-                        "Build", "Notifications"
-                    }
-                )
-            };
+            EditorGUI.BeginChangeCheck();
+            editor.OnInspectorGUI();
+            isNotificationsEnabled = EditorGUILayout.Toggle(
+                "Enable notifications",
+                isNotificationsEnabled
+            );
+            if (EditorGUI.EndChangeCheck())
+            {
+                BuildNotificationsSettings.Instance.IsEnabled = isNotificationsEnabled;
+                serialized.ApplyModifiedProperties();
+            }
         }
     }
 }
