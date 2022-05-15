@@ -2,13 +2,12 @@
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
-using UnityEngine;
 
 namespace JoaoVieira.BuildCompletedNotifier
 {
     class BuildCompletedNotifier : IPostprocessBuildWithReport
     {
-        private const int notificationDelayInMilliseconds = 1000;
+        private const int NOTIFICATION_DELAY_IN_MILLISECONDS = 1000;
 
         public int callbackOrder => int.MaxValue;
 
@@ -31,7 +30,7 @@ namespace JoaoVieira.BuildCompletedNotifier
 
         private static async Task PlaySuccessAudio()
         {
-            await Task.Delay(notificationDelayInMilliseconds).ConfigureAwait(true);
+            await Task.Delay(NOTIFICATION_DELAY_IN_MILLISECONDS).ConfigureAwait(true);
 
             EditorUtils.PlayClip(BuildNotificationsSettings.Instance.SuccessAudioClip);
         }
