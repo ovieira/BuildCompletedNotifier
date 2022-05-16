@@ -1,8 +1,11 @@
 # BuildCompletedNotifier
-Unity Build Completed Notifier
 
-# Instructions
+## Features
 
-1. Add your desired WAV file to a resources folder and rename it "buildcompleted.wav";
-2. Build project;
-3. Enjoy
+-   Trigger sound when build completes
+
+## How to Use
+
+1.  Do build
+2.  Listen to sound notification
+3.  Get back to work

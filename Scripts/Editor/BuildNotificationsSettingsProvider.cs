@@ -1,0 +1,48 @@
+using System.Collections.Generic;
+using UnityEditor;
+
+namespace JoaoVieira.BuildCompletedNotifier
+{
+    class BuildNotificationsSettingsProvider : SettingsProvider
+    {
+        public BuildNotificationsSettingsProvider(string path, SettingsScope scopes,
+            IEnumerable<string> keywords = null) : base(path, scopes, keywords) { }
+
+        [SettingsProvider]
+        public static SettingsProvider CreateSettingsProvider()
+        {
+            SettingsProvider provider = new BuildNotificationsSettingsProvider(
+                "Project/JoaoVieira.BuildCompletedNotifications",
+                SettingsScope.Project
+            );
+            provider.keywords = new List<string>(
+                new[]
+                {
+                    "Build", "Notifications"
+                }
+            );
+            return provider;
+        }
+
+        public override void OnGUI(string searchContext)
+        {
+            var settings = BuildNotificationsSettings.Instance;
+            var serialized = new SerializedObject(settings);
+            var editor = Editor.CreateEditor(settings);
+
+            bool isNotificationsEnabled = BuildNotificationsSettings.Instance.IsEnabled;
+
+            EditorGUI.BeginChangeCheck();
+            editor.OnInspectorGUI();
+            isNotificationsEnabled = EditorGUILayout.Toggle(
+                "Enable notifications",
+                isNotificationsEnabled
+            );
+            if (EditorGUI.EndChangeCheck())
+            {
+                BuildNotificationsSettings.Instance.IsEnabled = isNotificationsEnabled;
+                serialized.ApplyModifiedProperties();
+            }
+        }
+    }
+}
