@@ -12,7 +12,7 @@ namespace JoaoVieira.BuildCompletedNotifier
         public static SettingsProvider CreateSettingsProvider()
         {
             SettingsProvider provider = new BuildNotificationsSettingsProvider(
-                "Project/JoaoVieira.BuildCompletedNotifications",
+                "Project/O Vieira/Build Completed Notifier",
                 SettingsScope.Project
             );
             provider.keywords = new List<string>(
