@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
+using UnityEngine;
 
 namespace JoaoVieira.BuildCompletedNotifier
 {
@@ -15,24 +15,28 @@ namespace JoaoVieira.BuildCompletedNotifier
         {
             if (BuildNotificationsSettings.Instance.IsEnabled)
             {
-                await PlaySuccessAudio().ConfigureAwait(false);
+                await PlayAudioClip(report.summary.result).ConfigureAwait(false);
             }
         }
 
-        [MenuItem("Test/Play")]
-        private static async Task Test()
-        {
-            if (BuildNotificationsSettings.Instance.IsEnabled)
-            {
-                await PlaySuccessAudio().ConfigureAwait(false);
-            }
-        }
-
-        private static async Task PlaySuccessAudio()
+        private static async Task PlayAudioClip(BuildResult buildResult)
         {
             await Task.Delay(NOTIFICATION_DELAY_IN_MILLISECONDS).ConfigureAwait(true);
 
-            EditorUtils.PlayClip(BuildNotificationsSettings.Instance.SuccessAudioClip);
+            EditorUtils.PlayClip(GetAudioClip(buildResult));
+        }
+
+        private static AudioClip GetAudioClip(BuildResult buildResult)
+        {
+            switch (buildResult)
+            {
+                case BuildResult.Succeeded:
+                    return BuildNotificationsSettings.Instance.BuildSuccessfulAudioClip;
+                case BuildResult.Failed:
+                    return BuildNotificationsSettings.Instance.BuildFailedAudioClip;
+                default:
+                    return null;
+            }
         }
     }
 }
