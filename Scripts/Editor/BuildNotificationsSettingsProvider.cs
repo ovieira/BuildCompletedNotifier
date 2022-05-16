@@ -26,11 +26,11 @@ namespace JoaoVieira.BuildCompletedNotifier
 
         public override void OnGUI(string searchContext)
         {
-            var settings = BuildNotificationsSettings.Instance;
+            var settings = BuildCompletedNotifierSettings.Instance;
             var serialized = new SerializedObject(settings);
             var editor = Editor.CreateEditor(settings);
 
-            bool isNotificationsEnabled = BuildNotificationsSettings.Instance.IsEnabled;
+            bool isNotificationsEnabled = BuildCompletedNotifierSettings.Instance.IsEnabled;
 
             EditorGUI.BeginChangeCheck();
             editor.OnInspectorGUI();
@@ -40,7 +40,7 @@ namespace JoaoVieira.BuildCompletedNotifier
             );
             if (EditorGUI.EndChangeCheck())
             {
-                BuildNotificationsSettings.Instance.IsEnabled = isNotificationsEnabled;
+                BuildCompletedNotifierSettings.Instance.IsEnabled = isNotificationsEnabled;
                 serialized.ApplyModifiedProperties();
             }
         }

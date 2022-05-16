@@ -13,7 +13,7 @@ namespace JoaoVieira.BuildCompletedNotifier
 
         public async void OnPostprocessBuild(BuildReport report)
         {
-            if (BuildNotificationsSettings.Instance.IsEnabled)
+            if (BuildCompletedNotifierSettings.Instance.IsEnabled)
             {
                 await PlayAudioClip(report.summary.result).ConfigureAwait(false);
             }
@@ -31,9 +31,9 @@ namespace JoaoVieira.BuildCompletedNotifier
             switch (buildResult)
             {
                 case BuildResult.Succeeded:
-                    return BuildNotificationsSettings.Instance.BuildSuccessfulAudioClip;
+                    return BuildCompletedNotifierSettings.Instance.BuildSuccessful;
                 case BuildResult.Failed:
-                    return BuildNotificationsSettings.Instance.BuildFailedAudioClip;
+                    return BuildCompletedNotifierSettings.Instance.BuildFailed;
                 default:
                     return null;
             }
